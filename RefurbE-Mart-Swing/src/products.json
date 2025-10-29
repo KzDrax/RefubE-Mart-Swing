@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "name": "Refurbished iPhone 12",
+    "price": 28999,
+    "stock": 8,
+    "description": "64GB, excellent condition with 6-month warranty."
+  },
+  {
+    "id": 2,
+    "name": "Samsung Galaxy S21 (Refurbished)",
+    "price": 26999,
+    "stock": 10,
+    "description": "128GB storage, refurbished and tested."
+  },
+  {
+    "id": 3,
+    "name": "MacBook Air 2020 (Refurbished)",
+    "price": 44999,
+    "stock": 5,
+    "description": "13-inch M1 chip, 8GB RAM, 256GB SSD."
+  },
+  {
+    "id": 4,
+    "name": "iPad Pro 2020 (Refurbished)",
+    "price": 37999,
+    "stock": 6,
+    "description": "11-inch, 128GB, includes original cable."
+  },
+  {
+    "id": 5,
+    "name": "Dell XPS 13 (Refurbished)",
+    "price": 49999,
+    "stock": 4,
+    "description": "Intel i7, 16GB RAM, 512GB SSD, mint condition."
+  },
+  {
+    "id": 6,
+    "name": "Apple Watch Series 6 (Refurbished)",
+    "price": 14999,
+    "stock": 12,
+    "description": "40mm GPS model, battery replaced, 3-month warranty."
+  },
+  {
+    "id": 7,
+    "name": "Sony WH-1000XM4 Headphones (Refurbished)",
+    "price": 10999,
+    "stock": 15,
+    "description": "Noise-canceling wireless headphones with case."
+  },
+  {
+    "id": 8,
+    "name": "GoPro Hero 9 Black (Refurbished)",
+    "price": 18999,
+    "stock": 9,
+    "description": "5K video, waterproof, includes mounting kit."
+  },
+  {
+    "id": 9,
+    "name": "Nintendo Switch (Refurbished)",
+    "price": 16999,
+    "stock": 7,
+    "description": "Neon red/blue Joy-Cons, refurbished and tested."
+  }
+]
