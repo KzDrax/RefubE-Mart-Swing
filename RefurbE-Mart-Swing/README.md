@@ -5,18 +5,29 @@ RefurbE Mart is a Java Swing-based application designed for a web-based commerce
 
 ## Project Structure
 ```
-RefurbE-Mart-Swing
-├── src
-│   ├── Main.java
-│   ├── ui
-│   │   ├── AccountPage.java
-│   │   ├── CartPage.java
-│   │   ├── HomePage.java
-│   │   ├── ProductDetailsPage.java
-│   │   └── ProductsPage.java
-│   └── styles
-│       └── Styles.java
-├── README.md
+RefurbE-Mart-Swing/
+│
+├── 📁 bin/                           # Compiled .class files (auto-generated after javac)
+│
+├── 📁 lib/
+│   └── json-20240303.jar             # JSON library dependency
+│
+├── 📁 src/
+│   ├── 📁 data/
+│   │   └── products.json             # JSON data file containing product info
+│   │
+│   ├── 📁 styles/                    # All Java Swing UI files
+│   │   ├── Styles.java               # Reusable styles (fonts, colors, button styles)
+│   │   ├── HomePage.java             # Homepage panel
+│   │   ├── ProductsPage.java         # Product listing page
+│   │   ├── ProductDetailsPage.java   # Displays product info dynamically from JSON
+│   │   ├── CartPage.java             # Shopping cart page
+│   │   ├── Cart.java                 # Handles cart logic (list, add, remove, etc.)
+│   │   └── CartItem.java             # Model for each cart item (name, price, qty)
+│   │
+│   └── Main.java                     # Entry point for the application
+│
+└── README.md                         # Optional documentation or setup instructions
 ```
 
 ## File Descriptions
