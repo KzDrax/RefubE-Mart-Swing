@@ -10,7 +10,6 @@ import org.json.*;
 
 public class ProductsPage extends JPanel {
 
-    // --- [ADDED] --- Store products from JSON file
     private java.util.List<JSONObject> products;
 
     public ProductsPage(Consumer<String> onNavigate) {
@@ -27,7 +26,6 @@ public class ProductsPage extends JPanel {
         topPanel.add(titleLabel, BorderLayout.CENTER);
         add(topPanel, BorderLayout.NORTH);
 
-        // --- [UPDATED] --- Load from external JSON file
         loadProductsFromFile();
 
         JPanel productsPanel = new JPanel(new GridLayout(0, 3, 10, 10));
@@ -35,15 +33,13 @@ public class ProductsPage extends JPanel {
         for (JSONObject product : products) {
             JButton productButton = new JButton("<html><b>" + product.getString("name") + "</b><br>" +
                     "₱" + product.getDouble("price") + "</html>");
+
             productButton.addActionListener(e -> {
-                ProductDetailsPage detailsPage = new ProductDetailsPage(onNavigate);
-                detailsPage.setProductDetails(
-                    product.getString("name"),
-                    product.getDouble("price"),
-                    product.getInt("stock")
-                );
+                ProductDetailsPage.setSelectedProduct(product);
+
                 onNavigate.accept("ProductDetails");
             });
+
             productsPanel.add(productButton);
         }
 
@@ -51,12 +47,11 @@ public class ProductsPage extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    // --- [ADDED] --- Function to read and parse JSON file
     private void loadProductsFromFile() {
         products = new ArrayList<>();
 
         try {
-            String path = "src/data/products.json"; // <-- adjust path if needed
+            String path = "src/data/products.json";
             String jsonText = Files.readString(Paths.get(path));
             JSONArray array = new JSONArray(jsonText);
 
