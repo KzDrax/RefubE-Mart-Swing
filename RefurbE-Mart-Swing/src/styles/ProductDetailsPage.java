@@ -1,99 +1,109 @@
 package styles;
 
 import javax.swing.*;
+
+import org.json.JSONObject;
+
 import java.awt.*;
 import java.util.function.Consumer;
-import org.json.JSONObject;
-import styles.Cart;
+import styles.Styles;
+
+// 🟩 Added import for CartItem class
+import styles.CartItem;
 
 public class ProductDetailsPage extends JPanel {
+    private String productNameStr = "Product Name"; // 🟩 Placeholder product name
+    private double productPrice = 0.0;              // 🟩 Placeholder product price
+    private int availableStock = 10;                // 🟩 Placeholder stock count
+    private JSpinner quantitySpinner;               // 🟩 Added: spinner for quantity
+    private Consumer<String> onNavigate;
     private static JSONObject selectedProduct;
-    private JSpinner quantitySpinner;
-    private JLabel stockLabel;
 
-    // --- [NEW] --- Used to store the selected product data
     public static void setSelectedProduct(JSONObject product) {
         selectedProduct = product;
     }
 
     public ProductDetailsPage(Consumer<String> onNavigate) {
-        setLayout(new BorderLayout());
+        this.onNavigate = onNavigate; // 🟩 Added: store navigation reference
+        setLayout(new BorderLayout(15, 15));
+        setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
-        // --- [NEW] --- Back button
-        JButton backButton = new JButton("Back to Products");
+        if (selectedProduct != null) {
+        String name = selectedProduct.getString("name");
+        double price = selectedProduct.getDouble("price");
+        int stock = selectedProduct.getInt("stock");
+        setProductDetails(name, price, stock);
+        }
+
+        // 🟩 Top Panel (Back button)
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton backButton = new JButton("Back");
         Styles.applyButtonStyle(backButton);
         backButton.addActionListener(e -> onNavigate.accept("Products"));
-        add(backButton, BorderLayout.NORTH);
+        topPanel.add(backButton);
+        add(topPanel, BorderLayout.NORTH);
 
-        // --- [NEW] --- Main product info area
-        JPanel contentPanel = new JPanel();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        // 🟩 Center Panel (Product Info)
+        JPanel centerPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+        JLabel productName = new JLabel(productNameStr);
+        Styles.applyHeaderStyle(productName);
 
-        JLabel nameLabel = new JLabel();
-        JLabel priceLabel = new JLabel();
-        JLabel descLabel = new JLabel();
-        stockLabel = new JLabel();
+        JLabel productDescription = new JLabel(
+            "<html>This is a refurbished gadget with excellent performance.<br>" +
+            "All units are tested and certified for reuse.<br>" +
+            "Price: ₱" + productPrice + "<br>" +
+            "Available Stock: " + availableStock + "</html>"
+        );
+        productDescription.setFont(Styles.BODY_FONT);
 
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        priceLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        descLabel.setFont(new Font("Arial", Font.ITALIC, 14));
+        centerPanel.add(productName);
+        centerPanel.add(productDescription);
+        add(centerPanel, BorderLayout.CENTER);
 
-        contentPanel.add(nameLabel);
-        contentPanel.add(priceLabel);
-        contentPanel.add(descLabel);
-        contentPanel.add(stockLabel);
+        // 🟩 Bottom Panel (Quantity + Add to Cart)
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
 
-        // --- [NEW] --- Quantity selector
-        JPanel qtyPanel = new JPanel();
-        qtyPanel.add(new JLabel("Quantity: "));
-        quantitySpinner = new JSpinner(new SpinnerNumberModel(1, 1, 1, 1)); // default limits
-        qtyPanel.add(quantitySpinner);
-        contentPanel.add(qtyPanel);
+        // 🟩 Added: Quantity Label and Spinner
+        JLabel quantityLabel = new JLabel("Quantity:");
+        quantityLabel.setFont(Styles.BODY_FONT);
+        bottomPanel.add(quantityLabel);
 
-        // --- [NEW] --- Buy button
-        JButton buyButton = new JButton("Buy Now");
-        Styles.applyButtonStyle(buyButton);
-        contentPanel.add(buyButton);
+        quantitySpinner = new JSpinner(new SpinnerNumberModel(1, 1, availableStock, 1));
+        quantitySpinner.setFont(Styles.BODY_FONT);
+        bottomPanel.add(quantitySpinner);
 
-        add(contentPanel, BorderLayout.CENTER);
+        // 🟩 Added: Add to Cart button
+        JButton addToCartButton = new JButton("Add to Cart");
+        Styles.applyButtonStyle(addToCartButton);
+        bottomPanel.add(addToCartButton);
 
-        // --- [NEW] --- Populate UI when selectedProduct changes
-        SwingUtilities.invokeLater(() -> {
-            if (selectedProduct != null) {
-                String name = selectedProduct.getString("name");
-                int price = selectedProduct.getInt("price");
-                int stock = selectedProduct.getInt("stock");
-                String description = selectedProduct.getString("description");
+        // 🟩 Added: Event to add item to cart
+        addToCartButton.addActionListener(e -> {
+            int selectedQuantity = (int) quantitySpinner.getValue();
 
-                nameLabel.setText(name);
-                priceLabel.setText("₱" + price);
-                descLabel.setText(description);
-                stockLabel.setText("Stock: " + stock);
-
-                ((SpinnerNumberModel) quantitySpinner.getModel()).setMaximum(stock);
-            }
-        });
-
-        // --- [NEW] --- Handle buying logic
-        buyButton.addActionListener(e -> {
-            if (selectedProduct == null) return;
-            int qty = (Integer) quantitySpinner.getValue();
-            int stock = selectedProduct.getInt("stock");
-            if (qty > stock) {
-                JOptionPane.showMessageDialog(this, "Not enough stock!");
+            if (selectedQuantity > availableStock) {
+                JOptionPane.showMessageDialog(this, "Not enough stock available!");
                 return;
             }
 
-            // Update stock
-            selectedProduct.put("stock", stock - qty);
-            stockLabel.setText("Stock: " + selectedProduct.getInt("stock"));
+            // 🟩 FIXED: Create a CartItem object instead of passing string
+            Cart.addItem(new CartItem(productNameStr, productPrice, selectedQuantity));
 
-            // Add to cart
-            String productName = selectedProduct.getString("name");
-            int productPrice = selectedProduct.getInt("price");
-            Cart.addItem(productName, productPrice, qty);
-
-            JOptionPane.showMessageDialog(this, "Added " + qty + " × " + productName + " to cart!");
+            JOptionPane.showMessageDialog(this, 
+                selectedQuantity + " x " + productNameStr + " added to cart!");
+            
+            availableStock -= selectedQuantity;
+            onNavigate.accept("Cart"); // 🟩 Navigate to Cart page
         });
+
+        add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    // 🟩 Added: Method to set product details dynamically (called from ProductsPage)
+    public void setProductDetails(String name, double price, int stock) {
+        this.productNameStr = name;
+        this.productPrice = price;
+        this.availableStock = stock;
     }
 }
+        

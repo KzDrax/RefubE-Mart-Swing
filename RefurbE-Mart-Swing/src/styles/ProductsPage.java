@@ -36,7 +36,12 @@ public class ProductsPage extends JPanel {
             JButton productButton = new JButton("<html><b>" + product.getString("name") + "</b><br>" +
                     "₱" + product.getDouble("price") + "</html>");
             productButton.addActionListener(e -> {
-                ProductDetailsPage.setSelectedProduct(product);
+                ProductDetailsPage detailsPage = new ProductDetailsPage(onNavigate);
+                detailsPage.setProductDetails(
+                    product.getString("name"),
+                    product.getDouble("price"),
+                    product.getInt("stock")
+                );
                 onNavigate.accept("ProductDetails");
             });
             productsPanel.add(productButton);

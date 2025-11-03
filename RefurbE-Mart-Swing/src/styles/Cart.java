@@ -1,31 +1,32 @@
 package styles;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
+// 🟩 Updated Cart class to store CartItem objects
 public class Cart {
-    public static class CartItem {
-        public String name;
-        public int price;
-        public int quantity;
-        public CartItem(String name, int price, int quantity) {
-            this.name = name;
-            this.price = price;
-            this.quantity = quantity;
+    private static final List<CartItem> items = new ArrayList<>();
+
+    public static void addItem(CartItem newItem) {
+        // 🟩 If item already exists, update quantity
+        for (CartItem item : items) {
+            if (item.getName().equals(newItem.getName())) {
+                item.setQuantity(item.getQuantity() + newItem.getQuantity());
+                return;
+            }
         }
+        items.add(newItem);
     }
 
-    private static Map<String, CartItem> items = new LinkedHashMap<>();
-
-    public static void addItem(String name, int price, int quantity) {
-        if (items.containsKey(name)) {
-            CartItem existing = items.get(name);
-            existing.quantity += quantity;
-        } else {
-            items.put(name, new CartItem(name, price, quantity));
-        }
-    }
-
-    public static Map<String, CartItem> getItems() {
+    public static List<CartItem> getItems() {
         return items;
+    }
+
+    public static void removeItem(CartItem item) {
+        items.remove(item);
+    }
+
+    public static void clear() {
+        items.clear();
     }
 }

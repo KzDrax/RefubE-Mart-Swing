@@ -1,27 +1,22 @@
 package styles;
 
+// 🟩 Added new class to represent each item in cart
 public class CartItem {
-    private Product product;
+    private String name;
+    private double price;
     private int quantity;
 
-    public CartItem(Product product, int quantity) {
-        this.product = product;
+    public CartItem(String name, double price, int quantity) {
+        this.name = name;
+        this.price = price;
         this.quantity = quantity;
     }
 
-    public Product getProduct() {
-        return product;
-    }
+    public String getName() { return name; }
+    public double getPrice() { return price; }
+    public int getQuantity() { return quantity; }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void addQuantity(int amount) {
-        quantity += amount;
-    }
-
-    public double getTotalPrice() {
-        return product.getPrice() * quantity;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }
